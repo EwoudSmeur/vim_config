@@ -10,6 +10,14 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 
+Plugin 'kien/ctrlp.vim'
+Plugin 'tpope/vim-fugitive'
+Plugin '29decibel/codeschool-vim-theme'
+Plugin 'altercation/vim-colors-solarized'
+let g:solarized_termcolors=256
+Plugin 'morhetz/gruvbox'
+Plugin 'tpope/vim-unimpaired'
+
 " The following are examples of different formats supported.
 " Keep Plugin commands between vundle#begin/end.
 " plugin on GitHub repo
@@ -87,6 +95,9 @@ if has("autocmd")
 
   " Treat .rss files as XML
   " autocmd BufNewFile,BufRead *.rss setfiletype xml
+
+  "strip trailing whitespace upon save
+  autocmd FileType c autocmd BufWritePre <buffer> %s/\s\+$//e
 endif
 
 set relativenumber
@@ -95,8 +106,9 @@ set number
 "Make Ctrl-[ also exit in visual mode
 vnoremap <Ctrl>[ <Esc>
 
-"Use the evening color scheme
-colo evening
+"colo solarized
+colo gruvbox
+set background=dark
 
 "Use smart indentation
 set smartindent
@@ -119,3 +131,13 @@ nmap <Leader>p "+p
 nmap <Leader>P "+P
 vmap <Leader>p "+p
 vmap <Leader>P "+P
+
+" easy navigate splits
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
+
+" move cursor to new window
+set splitbelow
+set splitright
