@@ -131,6 +131,8 @@ nmap <Leader>p "+p
 nmap <Leader>P "+P
 vmap <Leader>p "+p
 vmap <Leader>P "+P
+nmap <Leader>y "+y
+nnoremap <Leader>yy "+yy
 
 " easy navigate splits
 nnoremap <C-J> <C-W><C-J>
