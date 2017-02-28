@@ -10,13 +10,21 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 
-Plugin 'kien/ctrlp.vim'
+Plugin 'wincent/command-t'
 Plugin 'tpope/vim-fugitive'
 Plugin '29decibel/codeschool-vim-theme'
 Plugin 'altercation/vim-colors-solarized'
 let g:solarized_termcolors=256
 Plugin 'morhetz/gruvbox'
 Plugin 'tpope/vim-unimpaired'
+Plugin 'jlanzarotta/bufexplorer'
+Plugin 'scrooloose/nerdcommenter'
+Plugin 'lervag/vimtex'
+Plugin 'vim-scripts/DoxygenToolkit.vim'
+" vimtex options:
+let g:vimtex_view_general_viewer = 'okular'
+let g:vimtex_view_general_options = '--unique @pdf\#src:@line@tex'
+let g:vimtex_view_general_options_latexmk = '--unique'
 
 " The following are examples of different formats supported.
 " Keep Plugin commands between vundle#begin/end.
@@ -44,15 +52,12 @@ filetype plugin indent on    " required
 " see :h vundle for more details or wiki for FAQ
 " Put your non-Plugin stuff after this line" Configure ctrlp
 
-" Ctrl-p settings
-set runtimepath^=~/.vim/bundle/ctrlp.vim
-let g:ctrlp_max_files=0
-let g:ctrlp_max_depth=40
 " Ignore certain folders
-set wildignore+=*/var/*,*/doc/*
+set wildignore+=*/doc/*,*/libopencm3/*,*/chibios/*,*/var/*
 
 "set leader key
 let mapleader = "\<Space>"
+let maplocalleader = ","
 
 " Set tabstop, softtabstop and shiftwidth to the same value
 command! -nargs=* Stab call Stab()
@@ -90,14 +95,26 @@ if has("autocmd")
   " Syntax of these languages is fussy over tabs Vs spaces
   autocmd FileType make setlocal ts=8 sts=8 sw=8 noexpandtab
   autocmd FileType c setlocal ts=2 sts=2 sw=2 expandtab
+  autocmd FileType c set syntax=c.doxygen
   autocmd FileType cpp setlocal ts=2 sts=2 sw=2 expandtab
   autocmd FileType xml setlocal ts=2 sts=2 sw=2 expandtab
+  autocmd FileType tex setlocal ts=2 sts=2 sw=2 noexpandtab
+  autocmd FileType bib setlocal ts=2 sts=2 sw=2 noexpandtab
+
+  autocmd FileType tex :NoMatchParen
+  autocmd FileType tex set norelativenumber
+  au FileType tex setlocal nocursorline
 
   " Treat .rss files as XML
   " autocmd BufNewFile,BufRead *.rss setfiletype xml
 
   "strip trailing whitespace upon save
   autocmd FileType c autocmd BufWritePre <buffer> %s/\s\+$//e
+
+  " Source the vimrc file after saving it
+  if has("autocmd")
+    autocmd bufwritepost .vimrc source $MYVIMRC
+  endif
 endif
 
 set relativenumber
@@ -125,14 +142,16 @@ nmap <silent> <Leader>f :NERDTreeFind<CR>
 
 "other mappings
 nnoremap <Leader>w :w<CR>
-vmap <Leader>y "+y
-vmap <Leader>d "+d
-nmap <Leader>p "+p
-nmap <Leader>P "+P
-vmap <Leader>p "+p
-vmap <Leader>P "+P
-nmap <Leader>y "+y
-nnoremap <Leader>yy "+yy
+" vmap <Leader>y "+y
+" vmap <Leader>d "+d
+" nmap <Leader>p "+p
+" nmap <Leader>P "+P
+" vmap <Leader>p "+p
+" vmap <Leader>P "+P
+" nmap <Leader>y "+y
+" nnoremap <Leader>yy "+yy
+" These mappings are not necessary if you use:
+set clipboard=unnamedplus
 
 " easy navigate splits
 nnoremap <C-J> <C-W><C-J>
@@ -143,3 +162,22 @@ nnoremap <C-H> <C-W><C-H>
 " move cursor to new window
 set splitbelow
 set splitright
+
+set timeout timeoutlen=800 ttimeoutlen=100
+
+" Shows options when tab-autocompleting
+set wildmenu
+" Autocomplete options
+set wildmode=longest,list,full
+
+" Allow going into non-existing fields with block edit
+set ve=block
+
+" keep undo history
+set hidden
+
+" warning when file changed on disk
+au BufWinEnter * checktime
+
+" abbreviation for long name
+cnoreabbrev vtc VimtexCompile
