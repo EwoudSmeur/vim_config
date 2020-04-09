@@ -25,6 +25,8 @@ Plugin 'vim-scripts/DoxygenToolkit.vim'
 let g:vimtex_view_general_viewer = 'okular'
 let g:vimtex_view_general_options = '--unique @pdf\#src:@line@tex'
 let g:vimtex_view_general_options_latexmk = '--unique'
+let g:vimtex_indent_enabled = 0 " Try to reduce lag when typing brackets
+let g:vimtex_compiler_latexmk = {'callback' : 0} " prevent servername error
 
 " The following are examples of different formats supported.
 " Keep Plugin commands between vundle#begin/end.
@@ -53,7 +55,7 @@ filetype plugin indent on    " required
 " Put your non-Plugin stuff after this line" Configure ctrlp
 
 " Ignore certain folders
-set wildignore+=*/doc/*,*/libopencm3/*,*/chibios/*,*/var/*
+set wildignore+=*/doc/*,*/libopencm3/*,*/chibios/*,*/var/*,*.aux,
 
 "set leader key
 let mapleader = "\<Space>"
@@ -100,6 +102,7 @@ if has("autocmd")
   autocmd FileType xml setlocal ts=2 sts=2 sw=2 expandtab
   autocmd FileType tex setlocal ts=2 sts=2 sw=2 noexpandtab
   autocmd FileType bib setlocal ts=2 sts=2 sw=2 noexpandtab
+  autocmd FileType py setlocal ts=4 sts=4 sw=4 expandtab
 
   autocmd FileType tex :NoMatchParen
   autocmd FileType tex set norelativenumber
@@ -116,6 +119,12 @@ if has("autocmd")
     autocmd bufwritepost .vimrc source $MYVIMRC
   endif
 endif
+
+augroup filetypedetect
+	" Some LaTeX types
+	au! BufRead,BufNewFile *.cls setfiletype tex
+	au! BufRead,BufNewFile *.lco setfiletype tex
+augroup END
 
 set relativenumber
 set number
@@ -181,3 +190,6 @@ au BufWinEnter * checktime
 
 " abbreviation for long name
 cnoreabbrev vtc VimtexCompile
+
+"Save commonly used regex
+source ~/.vim/regexlist
