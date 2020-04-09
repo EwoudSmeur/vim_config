@@ -1,0 +1,1 @@
+let FindDoubleWord = '\(\<\w\+\>\)\_s*\<\1\>'
